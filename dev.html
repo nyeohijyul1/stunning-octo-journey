@@ -20,6 +20,7 @@
             width: 100px;
             height: 100px;
             background-color: cornflowerblue;
+            touch-action: none;
         }
     </style>
 </head>
@@ -60,13 +61,13 @@
             }
             dragStart(e) {
                 this.element.style.transition = "none";
-                this.pointerOffsetX = e.x - this.x;
-                this.pointerOffsetY = e.y - this.y;
+                this.pointerOffsetX = e.clientX - this.x;
+                this.pointerOffsetY = e.clientY - this.y;
             }
             calcTranslate(e) {
                 // event 위치에서 오프셋만큼 빼서 움직일 거리 계산
-                this.x = e.x - this.pointerOffsetX;
-                this.y = e.y - this.pointerOffsetY;
+                this.x = e.clientX - this.pointerOffsetX;
+                this.y = e.clientY - this.pointerOffsetY;
             }
             render() {
                 this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
