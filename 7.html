@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        #container {
+            height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #box {
+            width: 100px;
+            height: 100px;
+            background-color: cornflowerblue;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="wrapper">
+            <div id="box"></div>
+        </div>
+    </div>
+    <script>
+        const box = document.querySelector("#box");
+
+        class Draggable {
+            constructor(element) {
+                this.element = element;
+                // translate 값
+                this.x = 0;
+                this.y = 0;
+                // 오프셋 설정
+                this.pointerOffsetX = 0;
+                this.pointerOffsetY = 0;
+                
+                this.onpointerdown = (e) => {
+                    this.element.setPointerCapture(e.pointerId)
+                    this.dragStart(e);
+                    this.element.addEventListener("pointermove", this.onpointermove);
+                    this.element.addEventListener("pointerup", this.onpointerup);
+                }
+                this.onpointermove = (e) => {
+                    this.calcTranslate(e);
+                    this.render(e);
+                }
+                this.onpointerup = () => {
+                   this.endTracking()
+                }
+
+                this.element.addEventListener("pointerdown", this.onpointerdown);
+            }
+            dragStart(e) {
+                this.element.style.transition = "none";
+                this.pointerOffsetX = e.x - this.x;
+                this.pointerOffsetY = e.y - this.y;
+            }
+            calcTranslate(e) {
+                // event 위치에서 오프셋만큼 빼서 움직일 거리 계산
+                this.x = e.x - this.pointerOffsetX;
+                this.y = e.y - this.pointerOffsetY;
+            }
+            render() {
+                this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
+            }
+            endTracking() {
+                this.element.removeEventListener("pointermove", this.onpointermove);
+                this.element.removeEventListener("pointerup", this.onpointerup);
+            }
+        }
+        class UndoableDragElement extends Draggable {
+            endTracking() {
+                super.endTracking();
+                this.x = 0;
+                this.y = 0;
+                this.element.style.transition = "transform 0.5s";
+                this.element.style.transitionTimingFunction = "cubic-bezier(0, 2, 1, 1)";
+                this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
+            }
+        }
+        new UndoableDragElement(box);
+
+    </script>
+</body>
+</html>
