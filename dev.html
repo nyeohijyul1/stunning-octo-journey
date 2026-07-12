@@ -32,6 +32,26 @@
         const box = document.querySelector("#box");
         const Move = (e) => {
             box.style.transform = `translate(${e.x-box.offsetLeft-box.offsetWidth/2}px, ${e.y-box.offsetTop-box.offsetHeight/2}px)`
+            
+            if (Math.abs(e.x-box.left) > box.offsetWidth || Math.abs(e.y-box.top) > box.offsetHeight) { // 작동 이상함
+                Up();
+            }
+            
+            // ChatGPT 코드 - position absolute 해야돼서 나중에 레이아웃 꼬일듯
+            
+            // box.style.left = `${e.x-box.offsetWidth/2}px`;
+            // box.style.top = `${e.y-box.offsetHeight/2}px`;
+
+            // const rect = box.getBoundingClientRect();
+
+            // if (
+            //     e.clientX < rect.left ||
+            //     e.clientX > rect.right ||
+            //     e.clientY < rect.top ||
+            //     e.clientY > rect.bottom
+            // ) {
+            //     Up();
+            // }
         }
         const Up = () => {
             box.style.transform = ""
