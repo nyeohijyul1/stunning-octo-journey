@@ -11,8 +11,10 @@
             padding: 0;
         }
         #container {
+            height: 100dvh;
             display: flex;
             justify-content: center;
+            align-items: center;
         }
         #box {
             width: 100px;
@@ -42,8 +44,8 @@
                 
                 this.onmousedown = (e) => {
                     this.dragStart(e);
-                    this.element.addEventListener("mousemove", this.onmousemove);
-                    this.element.addEventListener("mouseup", this.onmouseup);
+                    document.addEventListener("mousemove", this.onmousemove);
+                    document.addEventListener("mouseup", this.onmouseup);
                 }
                 this.onmousemove = (e) => {
                     this.calcTranslate(e);
@@ -56,6 +58,7 @@
                 this.element.addEventListener("mousedown", this.onmousedown);
             }
             dragStart(e) {
+                this.element.style.transition = "none";
                 this.mouseOffsetX = e.x - this.x;
                 this.mouseOffsetY = e.y - this.y;
             }
@@ -68,8 +71,8 @@
                 this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
             }
             endTracking() {
-                this.element.removeEventListener("mousemove", this.onmousemove);
-                this.element.removeEventListener("mouseup", this.onmouseup);
+                document.removeEventListener("mousemove", this.onmousemove);
+                document.removeEventListener("mouseup", this.onmouseup);
             }
         }
         class UndoableDragElement extends Draggable {
@@ -77,6 +80,8 @@
                 super.endTracking();
                 this.x = 0;
                 this.y = 0;
+                this.element.style.transition = "transform 0.5s";
+                this.element.style.transitionTimingFunction = "cubic-bezier(0, 2, 1, 1)";
                 this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
             }
         }
