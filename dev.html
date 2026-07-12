@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        #container {
+            display: flex;
+            justify-content: center;
+        }
+        #box {
+            width: 100px;
+            height: 100px;
+            background-color: cornflowerblue;
+            /* transition: 0.1s linear; */
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="wrapper">
+            <div id="box"></div>
+        </div>
+    </div>
+    <script>
+        const box = document.querySelector("#box");
+        const Move = (e) => {
+            box.style.transform = `translate(${e.x-box.offsetLeft-box.offsetWidth/2}px, ${e.y-box.offsetTop-box.offsetHeight/2}px)`
+        }
+        const Up = () => {
+            box.style.transform = ""
+            box.removeEventListener("mousemove", Move)
+            box.removeEventListener("mouseup", Up)
+        }
+        box.addEventListener("mousedown", () => {
+            box.addEventListener("mousemove", Move)
+            box.addEventListener("mouseup", Up)
+        })
+
+    </script>
+</body>
+</html>
