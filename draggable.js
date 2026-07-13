@@ -40,7 +40,7 @@ export default class Draggable {
         this.x = 0;
         this.y = 0;
         this.element.style.transition = "transform 0.5s";
-        this.element.style.transitionTimingFunction = "cubic-bezier(0, 2, 1, 1)";
-        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`
+        this.element.style.transitionTimingFunction = "cubic-bezier(0, 3, 1, 1)";
+        this.element.style.transform = ``
     }
 }
