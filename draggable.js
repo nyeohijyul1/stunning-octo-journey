@@ -7,10 +7,12 @@ export default class Draggable {
         this.pointerOffsetY = 0;
         
         this.onpointerdown = (e) => {
-            this.element.setPointerCapture(e.pointerId)
-            this.dragStart(e);
-            document.addEventListener("pointermove", this.onpointermove);
-            document.addEventListener("pointerup", this.onpointerup);
+            if (e.target.closest('.dragHandle')) {
+                this.element.setPointerCapture(e.pointerId)
+                this.dragStart(e);
+                document.addEventListener("pointermove", this.onpointermove);
+                document.addEventListener("pointerup", this.onpointerup);
+            }
         }
         this.onpointermove = (e) => {
             this.calcTranslate(e);

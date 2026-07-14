@@ -12,9 +12,10 @@
         }
         #wrapper {
             display: flex;
-            height: 100dvh;
+            min-height: 100dvh;
             justify-content: center;
             align-items: center;
+            margin: 30px;
         }
         #container {
             display: grid;
@@ -78,20 +79,30 @@
             justify-content: center;
             align-items: center;
         }
+        .dragHandle {
+            margin: 10%;
+            width: 80%;
+            height: 80%;
+            &:hover {
+                cursor: grab;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="wrapper">
     <div id="container">
         <table>
-            <tr>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-            </tr>
+            <tbody>
+                <tr>
+                    <td><div class="dragHandle"></div></td>
+                    <td><div class="dragHandle"></div></td>
+                </tr>
+                <tr>
+                    <td><div class="dragHandle"></div></td>
+                    <td><div class="dragHandle"></div></td>
+                </tr>
+            </tbody>
         </table>
         <div id="top" class="button-container"><button id="topBtn">+</button></div>
         <div id="right" class="button-container"><button id="rightBtn">+</button></div>
@@ -110,7 +121,73 @@
                 this.element.style.boxShadow = `${this.style.getPropertyValue("--box-shadow").trim()} oklch(0.6 0.1 ${this.hue} / 60%)`
             }
         }
-        const table = document.querySelector("table");
+        const tbody = document.querySelector("tbody");
+        const tr = document.querySelectorAll("tr");
+        let currentRow = 2;
+        let currentCol = 2;
+        const addRow = (isPrepend = true) => {
+            const newRow = document.createElement("tr");
+            const tds = [];
+            for (let index = 0; index < currentCol; index++) {
+                const newTd = document.createElement("td");
+                const newDiv = document.createElement("div");
+                newDiv.className = "dragHandle";
+                newTd.appendChild(newDiv);
+                // new Draggable(newTd);
+                // new randomColor(newTd);
+                newRow.appendChild(newTd);
+                tds.push(newTd);
+            }
+            // [...newRow.querySelectorAll('td')].forEach(element => {
+            //     new Draggable(element);
+            //     new randomColor(element);
+            // })
+            if (isPrepend) {
+                tbody.prepend(newRow);
+            } else {
+                tbody.appendChild(newRow);
+            }
+            tds.forEach(element => {
+                new Draggable(element);
+                new randomColor(element);
+            })
+            currentRow++;
+        }
+        const addCol = (isPrepend = true) => {
+            const trs = [...document.querySelectorAll("tr")];
+            const tds = [];
+            const makeNewTd = () => {
+                const newTd = document.createElement("td");
+                const newDiv = document.createElement("div");
+                newDiv.className = "dragHandle";
+                newTd.appendChild(newDiv);
+                return newTd;
+            }
+            if (isPrepend) {
+                for (let index = 0; index < currentRow; index++) {
+                    let newTd = makeNewTd();
+                    tds.push(newTd);
+                    // trs[index].prepend(makeNewTd);
+                    trs[index].prepend(newTd);
+                }
+            } else {
+                for (let index = 0; index < currentRow; index++) {
+                    let newTd = makeNewTd();
+                    tds.push(newTd);
+                    // trs[index].appendChild(makeNewTd);
+                    trs[index].appendChild(newTd);
+                }
+            }
+            tds.forEach(element => {
+                new Draggable(element);
+                new randomColor(element);
+            })
+            currentCol++;
+        }
+        document.querySelector("#topBtn").addEventListener("click", addRow);
+        document.querySelector("#bottomBtn").addEventListener("click", () => addRow(false));
+        document.querySelector("#rightBtn").addEventListener("click", () => addCol(false));
+        document.querySelector("#leftBtn").addEventListener("click", addCol);
         [...document.querySelectorAll('td')].forEach(element => {
             new Draggable(element);
             new randomColor(element);
