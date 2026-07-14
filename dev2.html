@@ -11,16 +11,19 @@
             margin: 0;
         }
         #wrapper {
-            display: flex;
-            min-height: 100dvh;
+            /* display: flex;
             justify-content: center;
-            align-items: center;
-            margin: 30px;
+            align-items: center; */
+            display: grid;
+            place-items: center;
+            min-height: 100dvh;
+            min-width: fit-content;
+            padding: 30px;
         }
         #container {
             display: grid;
             grid-template-rows: 50px auto 50px;
-            grid-template-columns: 50px auto 50px;
+            grid-template-columns: 50px max-content 50px;
             /* gap: 30px; */
         }
         table {
@@ -121,6 +124,18 @@
                 this.element.style.boxShadow = `${this.style.getPropertyValue("--box-shadow").trim()} oklch(0.6 0.1 ${this.hue} / 60%)`
             }
         }
+        // class Split {
+        //     constructor(element) {
+        //         this.element = element;
+        //         this.ondoubleclick = () => {
+        //             console.log('db')
+        //             this.element.parentNode.removeChild(this.element);
+        //         }
+        //         // this.element.addEventListener("dbclick", this.ondoubleclick);
+        //         console.log('hi')
+        //         this.element.addEventListener("dbclick", () => console.log('ddd'));
+        //     }
+        // }
         const tbody = document.querySelector("tbody");
         const tr = document.querySelectorAll("tr");
         let currentRow = 2;
@@ -150,6 +165,7 @@
             tds.forEach(element => {
                 new Draggable(element);
                 new randomColor(element);
+                // new Split(element);
             })
             currentRow++;
         }
@@ -181,6 +197,7 @@
             tds.forEach(element => {
                 new Draggable(element);
                 new randomColor(element);
+                // new Split(element);
             })
             currentCol++;
         }
@@ -191,7 +208,10 @@
         [...document.querySelectorAll('td')].forEach(element => {
             new Draggable(element);
             new randomColor(element);
+            // new Split(element);
         })
+        let tmp = [...document.querySelectorAll('tr')]
+        // tmp[0].addEventListener("dbclick", () => console.log('ddd'));
     </script>
 </body>
 </html>
