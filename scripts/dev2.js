@@ -1,5 +1,5 @@
 import Draggable from './draggable.js';
-import RandomColor from './randomcolor.js';
+import { randomColor } from './randomcolor.js';
 // import { addRow, addCol, processTd } from './td.js';
 
 const tbody = document.querySelector("tbody");
@@ -78,9 +78,10 @@ const processTd = ({ element, rc }) => {
     tdList[tdList.length] = {
         td: element,
         drag: new Draggable(element),
-        color: new RandomColor(element),
+        hue: randomColor(element),
         ...rc
     }
+    console.log(tdList);
 }
 document.querySelector("#topBtn").addEventListener("click", addRow);
 document.querySelector("#bottomBtn").addEventListener("click", () => addRow(false));
