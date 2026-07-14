@@ -11,9 +11,6 @@
             margin: 0;
         }
         #wrapper {
-            /* display: flex;
-            justify-content: center;
-            align-items: center; */
             display: grid;
             place-items: center;
             min-height: 100dvh;
@@ -124,18 +121,6 @@
                 this.element.style.boxShadow = `${this.style.getPropertyValue("--box-shadow").trim()} oklch(0.6 0.1 ${this.hue} / 60%)`
             }
         }
-        // class Split {
-        //     constructor(element) {
-        //         this.element = element;
-        //         this.ondoubleclick = () => {
-        //             console.log('db')
-        //             this.element.parentNode.removeChild(this.element);
-        //         }
-        //         // this.element.addEventListener("dbclick", this.ondoubleclick);
-        //         console.log('hi')
-        //         this.element.addEventListener("dbclick", () => console.log('ddd'));
-        //     }
-        // }
         const tbody = document.querySelector("tbody");
         const tr = document.querySelectorAll("tr");
         let currentRow = 2;
@@ -148,25 +133,31 @@
                 const newDiv = document.createElement("div");
                 newDiv.className = "dragHandle";
                 newTd.appendChild(newDiv);
-                // new Draggable(newTd);
-                // new randomColor(newTd);
                 newRow.appendChild(newTd);
                 tds.push(newTd);
             }
-            // [...newRow.querySelectorAll('td')].forEach(element => {
-            //     new Draggable(element);
-            //     new randomColor(element);
-            // })
             if (isPrepend) {
                 tbody.prepend(newRow);
+                tdList.forEach(item => {
+                    item.row += 1
+                })
             } else {
                 tbody.appendChild(newRow);
             }
-            tds.forEach(element => {
-                new Draggable(element);
-                new randomColor(element);
-                // new Split(element);
-            })
+            tds.forEach((element, i) => processTd({
+                element,
+                rc: {
+                    row: isPrepend ? 0 : currentRow,
+                    rowspan: 1,
+                    col: i,
+                    colspan: 1
+                },
+                // func: isPrepend ? () => {
+                //     tdList.forEach(item => {
+                //         item.row += 1
+                //     })
+                // } : undefined
+            }))
             currentRow++;
         }
         const addCol = (isPrepend = true) => {
@@ -183,35 +174,84 @@
                 for (let index = 0; index < currentRow; index++) {
                     let newTd = makeNewTd();
                     tds.push(newTd);
-                    // trs[index].prepend(makeNewTd);
                     trs[index].prepend(newTd);
                 }
+                tdList.forEach(item => {
+                    item.col += 1
+                })
             } else {
                 for (let index = 0; index < currentRow; index++) {
                     let newTd = makeNewTd();
                     tds.push(newTd);
-                    // trs[index].appendChild(makeNewTd);
                     trs[index].appendChild(newTd);
                 }
             }
-            tds.forEach(element => {
-                new Draggable(element);
-                new randomColor(element);
-                // new Split(element);
-            })
+            tds.forEach((element, i) => processTd({
+                element,
+                rc: {
+                    row: i,
+                    rowspan: 1,
+                    col: isPrepend ? 0 : currentCol,
+                    colspan: 1
+                },
+                // func: isPrepend ? () => {
+                //     tdList.forEach(item => {
+                //         item.col += 1
+                //     })
+                // } : undefined
+            }))
             currentCol++;
         }
         document.querySelector("#topBtn").addEventListener("click", addRow);
         document.querySelector("#bottomBtn").addEventListener("click", () => addRow(false));
         document.querySelector("#rightBtn").addEventListener("click", () => addCol(false));
         document.querySelector("#leftBtn").addEventListener("click", addCol);
-        [...document.querySelectorAll('td')].forEach(element => {
-            new Draggable(element);
-            new randomColor(element);
-            // new Split(element);
+        let tdList = [];
+        const processTd = ({
+            element,
+            rc,
+            // func = () => {},
+            // callback = () => {console.log(tdList)}
+        }) => {
+            // func();
+
+            // if (isPrepend) {
+            //     tdList.shift({
+            //         td: element,
+            //         drag: new Draggable(element),
+            //         color: new randomColor(element),
+            //         ...rc
+            //     })
+            //     return;
+            // }
+            tdList[tdList.length] = {
+                td: element,
+                drag: new Draggable(element),
+                color: new randomColor(element),
+                ...rc
+            }
+            // dragList[dragList.length] = {item: new Draggable(element)};
+            // colorList[colorList.length] = new randomColor(element);
+            
+            // callback();
+        }
+        [...document.querySelectorAll('td')].forEach((element, i) => processTd({
+            element,
+            rc: {
+                row: Math.floor(i/2),
+                rowspan: 1,
+                col: i%2,
+                colspan: 1
+            }
+        }));
+        tbody.addEventListener("click", (e) => {
+            tdList.forEach((a, i) => {
+                if (a.td == e.target) {
+                    // console.log(i)
+                    console.log(a.row, a.col)
+                }
+            });
         })
-        let tmp = [...document.querySelectorAll('tr')]
-        // tmp[0].addEventListener("dbclick", () => console.log('ddd'));
     </script>
 </body>
 </html>
