@@ -3,9 +3,12 @@ export default class Resizable {
         this.element = element;
         
         this.onpointerdown = (e) => {
-            
-            document.addEventListener("pointermove", this.onpointermove);
-            document.addEventListener("pointerup", this.onpointerup);
+            if (!e.target.closest('.dragHandle')) {
+                this.element.setPointerCapture(e.pointerId)
+
+                document.addEventListener("pointermove", this.onpointermove);
+                document.addEventListener("pointerup", this.onpointerup);
+            }
         }
         this.onpointermove = (e) => {
             
